@@ -11,8 +11,8 @@ Currently, two official plugins are available:
 
 This assumes you have Node installed.
 
-1. First, run an `npm install`
-2. Then, simply run an `npn run start`.
+1. First, run an `npm install --legacy-peer-deps`.
+2. Then, simply run an `npn run dev`.
 
 ## Expanding the ESLint configuration
 
