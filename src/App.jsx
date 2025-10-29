@@ -20,7 +20,7 @@ export const App = () => {
         </div>
         <div className="card-text">
           This is intended to showcase my modern React skills, including
-          reusable components, hooks, state, and more.
+          reusable components, hooks, state, and more. Enjoy!
         </div>
       </div>
     </>
