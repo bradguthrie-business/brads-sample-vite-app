@@ -1,5 +1,5 @@
 #root {
-  max-width: 1280px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -39,4 +39,29 @@
 
 .card-text {
   color: grey;
+}
+
+.components-section {
+  margin-top: 4rem;
+  padding: 2rem 0;
+}
+
+.components-section h2 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: #646cff;
+}
+
+.component-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+  justify-items: center;
+}
+
+@media (max-width: 768px) {
+  .component-grid {
+    grid-template-columns: 1fr;
+  }
 }
