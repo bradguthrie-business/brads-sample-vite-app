@@ -41,7 +41,7 @@ export const App = () => {
           </div>
           <div className="component-showcase-text">
             This section shows the use of React Context. We keep track of the
-            state!
+            state, even if you refresh!
           </div>
           <FollowingStatus />
           <div className="component-grid">
