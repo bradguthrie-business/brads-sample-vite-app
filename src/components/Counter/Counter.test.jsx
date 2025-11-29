@@ -1,23 +1,22 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
 import { Counter } from './Counter';
 
 describe('Counter Component', () => {
-  it('renders with initial value', () => {
+  it('should render with the initial value when provided', () => {
     render(<Counter initialValue={5} step={1} />);
 
     expect(screen.getByText('Counter Component')).toBeInTheDocument();
     expect(screen.getByText('5')).toBeInTheDocument();
   });
 
-  it('renders with default initial value of 0', () => {
+  it('should render with default initial value of 0 when no initial value is provided', () => {
     render(<Counter />);
 
     expect(screen.getByText('0')).toBeInTheDocument();
   });
 
-  it('increments count when increment button is clicked', async () => {
+  it('should increment count when increment button is clicked', async () => {
     const user = userEvent.setup();
     render(<Counter initialValue={0} step={1} />);
 
@@ -27,7 +26,7 @@ describe('Counter Component', () => {
     expect(screen.getByText('1')).toBeInTheDocument();
   });
 
-  it('decrements count when decrement button is clicked', async () => {
+  it('should decrement count when decrement button is clicked', async () => {
     const user = userEvent.setup();
     render(<Counter initialValue={5} step={1} />);
 
@@ -37,7 +36,7 @@ describe('Counter Component', () => {
     expect(screen.getByText('4')).toBeInTheDocument();
   });
 
-  it('resets count to initial value when reset button is clicked', async () => {
+  it('should reset count to initial value when reset button is clicked', async () => {
     const user = userEvent.setup();
     render(<Counter initialValue={10} step={2} />);
 
@@ -54,7 +53,7 @@ describe('Counter Component', () => {
     expect(screen.getByText('10')).toBeInTheDocument();
   });
 
-  it('uses custom step value for increment and decrement', async () => {
+  it('should use custom step value for increment and decrement when step prop is provided', async () => {
     const user = userEvent.setup();
     render(<Counter initialValue={0} step={5} />);
 
@@ -68,7 +67,7 @@ describe('Counter Component', () => {
     expect(screen.getByText('0')).toBeInTheDocument();
   });
 
-  it('handles multiple increments correctly', async () => {
+  it('should handle multiple increments correctly when increment button is clicked repeatedly', async () => {
     const user = userEvent.setup();
     render(<Counter initialValue={0} step={3} />);
 
@@ -81,7 +80,7 @@ describe('Counter Component', () => {
     expect(screen.getByText('9')).toBeInTheDocument();
   });
 
-  it('can go into negative numbers', async () => {
+  it('should allow count to go into negative numbers when decremented below zero', async () => {
     const user = userEvent.setup();
     render(<Counter initialValue={0} step={1} />);
 

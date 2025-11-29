@@ -1,22 +1,22 @@
 import { Check, Heart, Minus, UserPlus } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useFollow } from '../../context/FollowContext';
-import './UserCard.css';
+import './UserCard.scss';
 
-export const UserCard = ({
-  userId,
-  name,
-  role,
-  icon: IconComponent,
-  initialLikes = 0,
-}) => {
-  const [likes, setLikes] = useState(initialLikes);
-  const { toggleFollow, isFollowing } = useFollow();
+export const UserCard = ({ userId, name, role, icon: IconComponent }) => {
+  const { toggleFollow, isFollowing, toggleLike, getLikeCount, setLikeCount } =
+    useFollow();
+
+  useEffect(() => {
+    setLikeCount(userId, getLikeCount(userId));
+  }, [userId]);
 
   const isUserFollowing = isFollowing(userId);
+  console.log('isFollowing', isFollowing, userId);
+  const likes = getLikeCount(userId);
 
   const handleLike = () => {
-    setLikes(prev => prev + 1);
+    toggleLike(userId);
   };
 
   const handleToggleFollow = () => {

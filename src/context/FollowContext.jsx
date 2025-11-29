@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const FollowContext = createContext();
 
@@ -11,8 +11,32 @@ export const useFollow = () => {
 };
 
 export const FollowProvider = ({ children }) => {
-  const [followedUsers, setFollowedUsers] = useState(new Set());
+  // Followed users state
+  const [followedUsers, setFollowedUsers] = useState(() => {
+    const stored = localStorage.getItem('followedUsers');
+    return stored ? new Set(JSON.parse(stored)) : new Set();
+  });
 
+  // Likes state: { [userId]: likeCount }
+  const [likes, setLikes] = useState(() => {
+    const stored = localStorage.getItem('userLikes');
+    return stored ? JSON.parse(stored) : {};
+  });
+
+  // Persist followed users
+  useEffect(() => {
+    localStorage.setItem(
+      'followedUsers',
+      JSON.stringify(Array.from(followedUsers))
+    );
+  }, [followedUsers]);
+
+  // Persist likes
+  useEffect(() => {
+    localStorage.setItem('userLikes', JSON.stringify(likes));
+  }, [likes]);
+
+  // Toggle follow
   const toggleFollow = userId => {
     setFollowedUsers(prev => {
       const newSet = new Set(prev);
@@ -25,17 +49,37 @@ export const FollowProvider = ({ children }) => {
     });
   };
 
-  const isFollowing = userId => {
-    return followedUsers.has(userId);
+  // Increment like count for user
+  const toggleLike = userId => {
+    setLikes(prev => {
+      const current = prev[userId] || 0;
+      return { ...prev, [userId]: current + 1 };
+    });
   };
 
-  const getFollowCount = () => {
-    return followedUsers.size;
+  // Set like count directly (for initialLikes)
+  const setLikeCount = (userId, count) => {
+    setLikes(prev => ({ ...prev, [userId]: count }));
   };
+
+  // Get like count for a user
+  const getLikeCount = userId => {
+    return likes[userId] || 0;
+  };
+
+  const isFollowing = userId => followedUsers.has(userId);
+  const getFollowCount = () => followedUsers.size;
 
   return (
     <FollowContext.Provider
-      value={{ toggleFollow, isFollowing, getFollowCount }}
+      value={{
+        toggleFollow,
+        isFollowing,
+        getFollowCount,
+        toggleLike,
+        getLikeCount,
+        setLikeCount,
+      }}
     >
       {children}
     </FollowContext.Provider>

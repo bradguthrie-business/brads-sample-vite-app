@@ -21,11 +21,11 @@ npm start
 
 # Unit Tests
 
-This project uses **Vitest** and **React Testing Library** for unit and integration testing.
+This project uses **Jest** and **React Testing Library** for unit and integration testing.
 
 ### Configuration Files
 
-**vitest.config.js**
+**jest.config.js**
 
 - Configured for jsdom environment
 - Globals enabled for test functions

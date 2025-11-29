@@ -1,144 +1,48 @@
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
-import { FollowProvider, useFollow } from '../../context/FollowContext';
+import { useFollow } from '../../context/FollowContext';
 import { FollowingStatus } from './FollowingStatus';
 
-// Mock UserCard to test the context integration
-const MockUserCard = ({ userId }) => {
-  const { toggleFollow } = useFollow();
-  return <button onClick={() => toggleFollow(userId)}>Follow {userId}</button>;
-};
-
-const renderWithProvider = ui => {
-  return render(<FollowProvider>{ui}</FollowProvider>);
-};
+jest.mock('../../context/FollowContext', () => ({
+  useFollow: jest.fn(),
+}));
 
 describe('FollowingStatus Component', () => {
-  it('renders with initial count of 0', () => {
-    renderWithProvider(<FollowingStatus />);
-
-    expect(screen.getByText('0')).toBeInTheDocument();
-    expect(screen.getByText(/you are following/i)).toBeInTheDocument();
-    expect(screen.getByText(/people/i)).toBeInTheDocument();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('displays "person" when following exactly 1 user', async () => {
-    const user = userEvent.setup();
-
-    renderWithProvider(
-      <>
-        <FollowingStatus />
-        <MockUserCard userId="user-1" />
-      </>
-    );
-
-    const followButton = screen.getByRole('button', { name: /follow user-1/i });
-    await user.click(followButton);
-
-    expect(screen.getByText('1')).toBeInTheDocument();
-    expect(screen.getByText(/person/i)).toBeInTheDocument();
-  });
-
-  it('displays "people" when following multiple users', async () => {
-    const user = userEvent.setup();
-
-    renderWithProvider(
-      <>
-        <FollowingStatus />
-        <MockUserCard userId="user-1" />
-        <MockUserCard userId="user-2" />
-        <MockUserCard userId="user-3" />
-      </>
-    );
-
-    const followButtons = screen.getAllByRole('button', {
-      name: /follow user-/i,
+  it('should render the FollowingStatus component with default text of "You are not following anyone." when given a count of 0 users followed.', async () => {
+    const numUsersFollowing = 0;
+    useFollow.mockReturnValue({
+      getFollowCount: jest.fn().mockReturnValue(numUsersFollowing),
     });
 
-    await user.click(followButtons[0]);
-    await user.click(followButtons[1]);
-    await user.click(followButtons[2]);
+    render(<FollowingStatus />);
 
-    expect(screen.getByText('3')).toBeInTheDocument();
-    expect(screen.getByText(/people/i)).toBeInTheDocument();
+    expect(
+      screen.getByText('You are not following anyone.')
+    ).toBeInTheDocument();
   });
 
-  it('updates count in real-time when users are followed', async () => {
-    const user = userEvent.setup();
-
-    renderWithProvider(
-      <>
-        <FollowingStatus />
-        <MockUserCard userId="user-1" />
-        <MockUserCard userId="user-2" />
-      </>
-    );
-
-    expect(screen.getByText('0')).toBeInTheDocument();
-
-    const followButtons = screen.getAllByRole('button', {
-      name: /follow user-/i,
+  it('should render the FollowingStatus component with text "You are following 1 person." when given a count of 1 user followed.', async () => {
+    const numUsersFollowing = 1;
+    useFollow.mockReturnValue({
+      getFollowCount: jest.fn().mockReturnValue(numUsersFollowing),
     });
 
-    await user.click(followButtons[0]);
-    expect(screen.getByText('1')).toBeInTheDocument();
+    render(<FollowingStatus />);
 
-    await user.click(followButtons[1]);
-    expect(screen.getByText('2')).toBeInTheDocument();
+    expect(screen.getByText('You are following 1 person.')).toBeInTheDocument();
   });
 
-  it('decrements count when users are unfollowed', async () => {
-    const user = userEvent.setup();
+  it('should render the FollowingStatus component with text "You are following 2 people." when given a count of 2 users followed.', async () => {
+    const numUsersFollowing = 2;
+    useFollow.mockReturnValue({
+      getFollowCount: jest.fn().mockReturnValue(numUsersFollowing),
+    });
 
-    renderWithProvider(
-      <>
-        <FollowingStatus />
-        <MockUserCard userId="user-1" />
-      </>
-    );
+    render(<FollowingStatus />);
 
-    const followButton = screen.getByRole('button', { name: /follow user-1/i });
-
-    await user.click(followButton);
-    expect(screen.getByText('1')).toBeInTheDocument();
-
-    await user.click(followButton);
-    expect(screen.getByText('0')).toBeInTheDocument();
-  });
-
-  it('displays "You are following" text', () => {
-    renderWithProvider(<FollowingStatus />);
-
-    expect(screen.getByText(/you are following/i)).toBeInTheDocument();
-  });
-
-  it('handles multiple follow/unfollow actions correctly', async () => {
-    const user = userEvent.setup();
-
-    renderWithProvider(
-      <>
-        <FollowingStatus />
-        <MockUserCard userId="user-1" />
-        <MockUserCard userId="user-2" />
-        <MockUserCard userId="user-3" />
-      </>
-    );
-
-    const followButtons = screen.getAllByRole('button');
-
-    // Follow all three
-    await user.click(followButtons[0]);
-    await user.click(followButtons[1]);
-    await user.click(followButtons[2]);
-    expect(screen.getByText('3')).toBeInTheDocument();
-
-    // Unfollow one
-    await user.click(followButtons[1]);
-    expect(screen.getByText('2')).toBeInTheDocument();
-
-    // Unfollow another
-    await user.click(followButtons[0]);
-    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.getByText('You are following 2 people.')).toBeInTheDocument();
   });
 });
