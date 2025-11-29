@@ -1,5 +1,7 @@
 # React + Vite Application
 
+This application is accessible at this link: [https://bradguthrie-business.github.io/brads-sample-vite-app/](https://bradguthrie-business.github.io/brads-sample-vite-app/)
+
 This template provides a minimal setup to get a sample React application setup with Vite, ESLint, Prettier, and Husky for pre-commit hooks.
 
 This app is intended to showcase my modern frontend React skills with hooks, state, reusable function components, styling consistency, unit testing, and more.
@@ -67,7 +69,6 @@ Example:
 ```jsx
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
 import { YourComponent } from './YourComponent';
 
 describe('YourComponent', () => {
