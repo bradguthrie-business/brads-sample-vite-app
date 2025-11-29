@@ -12,7 +12,6 @@ export const UserCard = ({ userId, name, role, icon: IconComponent }) => {
   }, [userId]);
 
   const isUserFollowing = isFollowing(userId);
-  console.log('isFollowing', isFollowing, userId);
   const likes = getLikeCount(userId);
 
   const handleLike = () => {
